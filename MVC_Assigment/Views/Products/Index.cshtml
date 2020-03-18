@@ -1,0 +1,111 @@
+﻿@model IEnumerable<MVC_Assigment.Models.Product>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div class="form-group">
+    <div class="col-md-10">
+        @Html.DropDownList("CateId", null, htmlAttributes: new { @Id = "cateList", @class = "form-control" })
+    </div>
+</div>
+
+@using (Ajax.BeginForm("ProductSearch", "Products",
+new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "GET",
+    OnFailure = "searchFailed",
+    LoadingElementId = "ajax-loader",
+    UpdateTargetId = "prod_list",
+}))
+{
+    <input type="text" name="keyword" />
+    <input type="Submit" placeholder="Search" />
+    <p id="ajax-loader" style="display:none">Loading.............</p>
+}
+
+
+<p>
+    @Html.ActionLink("Create New", "Create") |
+    @Html.ActionLink("Cart", "ShowCart", "ShoppingCart")
+</p>
+
+<div id="prod_list">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.CateName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProdCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProdName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProdPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProdDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProdThumbnail)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CateName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProdCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProdName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProdPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProdDescription)
+                </td>
+                <td>
+                    <img src="@item.ProdThumbnail" width="50px" height="50px" />
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ProdId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ProdId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ProdId }) |
+                    @Html.ActionLink("Add To Cart", "AddToCart", "ShoppingCart", new { productId = item.ProdId, quantity = 1 }, null)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<script src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+@*<script src="@Url.Content("~/Scripts/TestJs.js")"></script>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#cateList").change(function () {
+            var id = $("#cateList").val();
+            $.ajax({
+                url: "FilterAjax",
+                type: 'get',
+                data: {
+                    id: id
+                }
+            }).done(function (response) {
+                $("#prod_list").html(response);
+            });
+        });
+    });
+</script>

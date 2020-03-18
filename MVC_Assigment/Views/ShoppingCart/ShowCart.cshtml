@@ -1,0 +1,99 @@
+﻿@model MVC_Assigment.Models.Cart
+@{
+    ViewBag.Title = "ShowCart";
+    int index = 1;
+}
+
+<h2>ShowCart</h2>
+
+<p>
+    @Html.ActionLink("Index Product", "Index", "Products")
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Index</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price (VND)</th>
+            <th>Quantity</th>
+            <th>Total Item Price</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items.Values)
+        {
+            <tr>
+                <td>@index</td>
+                <td><img src="@item.ProductThumbnail" style="width: 100px" /></td>
+                <td>@item.ProductName</td>
+                <td>@item.ProductPrice</td>
+                <td><input class="quantity" type="number" name="quantity" value="@item.Quantity" style="width: 100px" onchange="updateQuantity(@item.ProductId, $(this))"></td>
+                <td>@item.TotalItemPrice</td>
+                <td><button type="button" class="btn btn-warning" onclick="if (confirm('Remove Item ?')) { removeItem(@item.ProductId) }">Remove</button></td>
+                <td></td>
+            </tr>
+            index++;
+        }
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><strong>Total Quantity: @Model.TotalQuantity</strong></td>
+        <td><strong>Total Price: @Model.TotalPrice</strong></td>
+        <td></td>
+        <td><p>@Html.ActionLink("Remove All Item", "RemoveAll", null, htmlAttributes: new { @class = "btn btn-danger" })</p></td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+<script src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+<script type="text/javascript">
+    function updateQuantity(id, eleinput) {
+        var prodId = id;
+        var prodQuantity = eleinput.val();
+        $.ajax({
+            url: "UpdateCart",
+            type: 'get',
+            data: {
+                productId: prodId,
+                quantity: prodQuantity
+            }
+        }).done(function (response) {
+            location.reload();
+        });
+    }
+    function removeItem(id) {
+        var prodId = id;
+        $.ajax({
+            url: "RemoveCartItem",
+            type: 'get',
+            data: {
+                productId: prodId,
+            }
+        }).done(function (response) {
+            location.reload();
+        });
+    }
+</script>
+@*@using (Ajax.BeginForm("UpdateCart", "ShoppingCart",
+    new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "GET",
+        OnFailure = "searchFailed",
+        LoadingElementId = "ajax-loader",
+        UpdateTargetId = "prod_list",
+    }))
+    {
+        <input type="text" name="keyword" />
+        <input type="Submit" placeholder="Search" />
+        <p id="ajax-loader" style="display:none">Loading.............</p>
+    }*@

@@ -1,0 +1,66 @@
+﻿@model MVC_Assigment.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.CateName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.CateName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProdCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProdCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProdName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProdName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProdPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProdPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProdDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProdDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProdThumbnail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProdThumbnail)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProdId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
